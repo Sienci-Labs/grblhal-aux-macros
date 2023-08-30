@@ -142,7 +142,7 @@ static void run_macro (uint_fast16_t state)
 }
 
 // This resets the flag for debounce.
-static void end_cmd (uint_fast16_t state)
+static void end_cmd (void)
 {
     is_executing = false;
 }
