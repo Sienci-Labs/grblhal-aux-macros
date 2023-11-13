@@ -204,11 +204,11 @@ static const setting_detail_t macro_settings[] = {
     { Setting_UserDefined_4, Group_UserSettings, "Macro 2", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[1].data, NULL, NULL },
     { Setting_UserDefined_5, Group_UserSettings, "Macro 3", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[2].data, NULL, NULL },
     //{ Setting_UserDefined_3, Group_UserSettings, "Run Real-Time Function", NULL, Format_RadioButtons, "Run,Pause,Halt", NULL, NULL, Setting_NonCore, canbus_set_baud, canbus_get_baud, NULL },
-    { Setting_UserDefined_0, Group_UserSettings, "Macro 1 Button Function", NULL, Format_RadioButtons,  "Run Macro,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[0].command_idx, NULL, NULL },
+    { Setting_UserDefined_0, Group_UserSettings, "Macro 1 Button Function", NULL, Format_RadioButtons,  "Macro 1,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[0].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_1, Group_UserSettings, "Macro 2 Button Function", NULL, Format_RadioButtons,  "Macro 1,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
+    { Setting_UserDefined_1, Group_UserSettings, "Macro 2 Button Function", NULL, Format_RadioButtons,  "Macro 2,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_2, Group_UserSettings, "Macro 3 Button Function", NULL, Format_RadioButtons,  "Macro 2,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
+    { Setting_UserDefined_2, Group_UserSettings, "Macro 3 Button Function", NULL, Format_RadioButtons,  "Macro 3,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
