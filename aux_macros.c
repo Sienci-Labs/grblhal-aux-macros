@@ -78,7 +78,7 @@ static stream_read_ptr stream_read;
 static driver_reset_ptr driver_reset;
 
 static uint32_t debounce_ms = 0;
-#define DEBOUNCE_DELAY 100
+#define DEBOUNCE_DELAY 500
 
 static int16_t get_macro_char (void);
 
@@ -136,7 +136,7 @@ static status_code_t trap_status_report (status_code_t status_code)
 
 // Actual start of macro execution.
 static void run_macro (uint_fast16_t state)
-{
+{   
     if(state == STATE_IDLE && hal.stream.read != get_macro_char) {
         stream_read = hal.stream.read;                      // Redirect input stream to read from the macro instead of
         hal.stream.read = get_macro_char;                   // the active stream. This ensures that input streams are not mingled.
@@ -154,7 +154,7 @@ static void end_cmd (void)
 static void run_cmd (uint_fast16_t state)
 {
     grbl.enqueue_realtime_command(rt_command);
-    //hal.delay_ms(1000, end_cmd);//100ms debounce
+    end_cmd();
 }
 
 // On falling interrupt run macro if machine is in Idle state.
@@ -177,21 +177,22 @@ ISR_CODE static void execute_macro (uint8_t irq_port, bool is_high)
         
         //if an RT command is selected execute it
         if(plugin_settings.macro[idx].command_idx){
-            //is_executing = true;
+            is_executing = true;
+            debounce_ms = ms;
             rt_command = cmd[plugin_settings.macro[idx].command_idx];
             protocol_enqueue_rt_command(run_cmd);
             return;
         }else 
         //otherwise run the macro if idle
         if (state_get() == STATE_IDLE){
-            //is_executing = true;
+            is_executing = true;
+            debounce_ms = ms;
             command = plugin_settings.macro[idx].data;
             if(!(*command == '\0' || *command == 0xFF))     // If valid command
                 protocol_enqueue_rt_command(run_macro);     // register run_macro function to be called from foreground process.
         }
+        
     }
-
-    debounce_ms = ms;
 }
 
 static const setting_group_detail_t macro_groups [] = {
