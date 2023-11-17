@@ -42,7 +42,9 @@
 #define N_MACROS 4
 #endif
 
-static uint32_t get_int (setting_id_t id);
+static uint8_t val[N_MACROS] = {0};
+static uint8_t prev_val[N_MACROS] = {99};
+static uint8_t latch[N_MACROS] = {0};
 
 //the index of this array must match the radio button descriptions
 uint8_t cmd[] = {   NULL, 
@@ -77,7 +79,10 @@ static macro_settings_t plugin_settings;
 static stream_read_ptr stream_read;
 static driver_reset_ptr driver_reset;
 
+static on_execute_realtime_ptr on_execute_realtime, on_execute_delay;
+
 static uint32_t debounce_ms = 0;
+static uint32_t polling_ms = 0;
 #define DEBOUNCE_DELAY 500
 
 static int16_t get_macro_char (void);
@@ -161,11 +166,13 @@ static void run_cmd (uint_fast16_t state)
 // Since this function runs in an interrupt context actual start of execution
 // is registered as a single run task to be started from the foreground process.
 // TODO: add debounce?
-ISR_CODE static void execute_macro (uint8_t irq_port, bool is_high)
+//ISR_CODE static void execute_macro (uint8_t irq_port, bool is_high)
+//now uses polling.
+static void execute_macro (uint8_t irq_port, bool is_high)
 {
     uint32_t ms = hal.get_elapsed_ticks();
     if(ms < debounce_ms + DEBOUNCE_DELAY) // debounce
-        return;   
+        return;    
 
     if(!is_high && !is_executing) {
 
@@ -190,9 +197,45 @@ ISR_CODE static void execute_macro (uint8_t irq_port, bool is_high)
             command = plugin_settings.macro[idx].data;
             if(!(*command == '\0' || *command == 0xFF))     // If valid command
                 protocol_enqueue_rt_command(run_macro);     // register run_macro function to be called from foreground process.
-        }
-        
+        }        
     }
+}
+
+static void poll_buttons (void){
+    
+    uint32_t ms = hal.get_elapsed_ticks();
+    if(ms < polling_ms + 50)
+        return;
+
+    int_fast8_t idx = N_MACROS;
+    do {
+        idx--;
+        prev_val[idx] = val[idx];
+        val[idx] = hal.port.wait_on_input(Port_Digital, port[idx], WaitMode_Immediate, 0.0f);//read the IO pin
+        if ((prev_val[idx] == 0) && (val[idx] == 0) && (latch[idx] == 0)){
+            latch[idx] = 1;
+            execute_macro(port[idx], 0);
+        } else{
+            if ((prev_val[idx] == 1) && (val[idx] == 1))
+                latch[idx] = 0;
+        }
+    } while(idx >= 0);
+
+    polling_ms = ms;    
+}
+
+static void button_poll_realtime (sys_state_t grbl_state)
+{
+    on_execute_realtime(grbl_state);
+
+    poll_buttons();
+}
+
+static void button_poll_delay (sys_state_t grbl_state)
+{
+    on_execute_delay(grbl_state);
+
+    poll_buttons();
 }
 
 static const setting_group_detail_t macro_groups [] = {
@@ -308,7 +351,7 @@ static void macro_settings_load (void)
     idx = N_MACROS;
     do {
         idx--;
-        if(port[idx] != 0xFF && hal.port.register_interrupt_handler(port[idx], IRQ_Mode_Falling, execute_macro))
+        //if(port[idx] != 0xFF && hal.port.register_interrupt_handler(port[idx], IRQ_Mode_Falling, execute_macro))
             n_ok++;
     } while(idx);
 
@@ -375,6 +418,13 @@ void aux_macros_init (void)
         // Add our plugin to the $I options report.
         on_report_options = grbl.on_report_options;
         grbl.on_report_options = report_options;
+
+        //add polling of button state to realtime and delay chains
+        on_execute_realtime = grbl.on_execute_realtime;
+        grbl.on_execute_realtime = button_poll_realtime;
+
+        on_execute_delay = grbl.on_execute_delay;
+        grbl.on_execute_delay = button_poll_delay;        
 
         // Hook into the driver reset chain so we
         // can restore normal operation if a reset happens
