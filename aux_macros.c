@@ -56,7 +56,8 @@ uint8_t cmd[] = {   NULL,
                     CMD_OVERRIDE_COOLANT_FLOOD_TOGGLE,
                     CMD_OVERRIDE_COOLANT_MIST_TOGGLE, 
                     CMD_OPTIONAL_STOP_TOGGLE, 
-                    CMD_SINGLE_BLOCK_TOGGLE  
+                    CMD_SINGLE_BLOCK_TOGGLE,
+                    CMD_SAFETY_DOOR
                     };
 
 typedef struct {
@@ -83,7 +84,7 @@ static on_execute_realtime_ptr on_execute_realtime, on_execute_delay;
 
 static uint32_t debounce_ms = 0;
 static uint32_t polling_ms = 0;
-#define DEBOUNCE_DELAY 500
+#define DEBOUNCE_DELAY 250
 
 static int16_t get_macro_char (void);
 
@@ -247,11 +248,11 @@ static const setting_detail_t macro_settings[] = {
     { Setting_UserDefined_4, Group_UserSettings, "Macro 2", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[1].data, NULL, NULL },
     { Setting_UserDefined_5, Group_UserSettings, "Macro 3", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[2].data, NULL, NULL },
 
-    { Setting_UserDefined_0, Group_UserSettings, "Macro 1 Button Function", NULL, Format_RadioButtons,  "Macro 1,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[0].command_idx, NULL, NULL },
+    { Setting_UserDefined_0, Group_UserSettings, "Macro 1 Button Function", NULL, Format_RadioButtons,  "Macro 1,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle, Parking Pause", NULL, NULL, Setting_NonCore, &plugin_settings.macro[0].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_1, Group_UserSettings, "Macro 2 Button Function", NULL, Format_RadioButtons,  "Macro 2,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
+    { Setting_UserDefined_1, Group_UserSettings, "Macro 2 Button Function", NULL, Format_RadioButtons,  "Macro 2,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle, Parking Pause", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_2, Group_UserSettings, "Macro 3 Button Function", NULL, Format_RadioButtons,  "Macro 3,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
+    { Setting_UserDefined_2, Group_UserSettings, "Macro 3 Button Function", NULL, Format_RadioButtons,  "Macro 3,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle, Parking Pause", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
