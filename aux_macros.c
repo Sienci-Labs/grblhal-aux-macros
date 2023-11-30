@@ -71,7 +71,7 @@ typedef struct {
 
 static bool can_map_ports = false, is_executing = false;
 static uint8_t n_ports;
-uint8_t port[N_MACROS];
+static uint8_t port[N_MACROS];
 static char max_port[4], *command;
 static char rt_command;
 static nvs_address_t nvs_address;
