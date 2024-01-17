@@ -47,7 +47,7 @@ static uint8_t prev_val[N_MACROS] = {99};
 static uint8_t latch[N_MACROS] = {0};
 
 //the index of this array must match the radio button descriptions
-uint8_t cmd[] = {   NULL, 
+uint8_t cmd[] = {   0, 
                     CMD_CYCLE_START, 
                     CMD_FEED_HOLD, 
                     CMD_RESET, 
@@ -283,7 +283,7 @@ static void macro_settings_save (void)
 // Restore default settings and write to non volatile storage (NVS).
 static void macro_settings_restore (void)
 {
-    uint_fast8_t idx = N_MACROS, port = n_ports > N_MACROS ? n_ports - N_MACROS : 0;
+    uint_fast8_t idx = N_MACROS;
     uint_fast8_t idy;
 
     char default_str[] = "G4P0";
