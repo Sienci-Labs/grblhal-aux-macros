@@ -49,15 +49,15 @@ static uint8_t latch[N_MACROS] = {0};
 //the index of this array must match the radio button descriptions
 uint8_t cmd[] = {   0, 
                     CMD_CYCLE_START, 
-                    CMD_FEED_HOLD, 
+                    CMD_FEED_HOLD,
+                    CMD_SAFETY_DOOR,
                     CMD_RESET, 
-                    CMD_PROBE_CONNECTED_TOGGLE, 
                     CMD_OVERRIDE_SPINDLE_STOP, 
-                    CMD_OVERRIDE_COOLANT_FLOOD_TOGGLE,
                     CMD_OVERRIDE_COOLANT_MIST_TOGGLE, 
+                    CMD_OVERRIDE_COOLANT_FLOOD_TOGGLE,
+                    CMD_PROBE_CONNECTED_TOGGLE, 
                     CMD_OPTIONAL_STOP_TOGGLE, 
-                    CMD_SINGLE_BLOCK_TOGGLE,
-                    CMD_SAFETY_DOOR
+                    CMD_SINGLE_BLOCK_TOGGLE
                     };
 
 typedef struct {
@@ -244,31 +244,31 @@ static const setting_group_detail_t macro_groups [] = {
 };
 
 static const setting_detail_t macro_settings[] = {
-    { Setting_UserDefined_3, Group_UserSettings, "Macro 1", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[0].data, NULL, NULL },
-    { Setting_UserDefined_4, Group_UserSettings, "Macro 2", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[1].data, NULL, NULL },
-    { Setting_UserDefined_5, Group_UserSettings, "Macro 3", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[2].data, NULL, NULL },
+    { Setting_UserDefined_3, Group_UserSettings, "Button 1 macro", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[0].data, NULL, NULL },
+    { Setting_UserDefined_4, Group_UserSettings, "Button 2 macro", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[1].data, NULL, NULL },
+    { Setting_UserDefined_5, Group_UserSettings, "Button 3 macro", NULL, Format_String, "x(127)", "0", "127", Setting_NonCore, &plugin_settings.macro[2].data, NULL, NULL },
 
-    { Setting_UserDefined_0, Group_UserSettings, "Macro 1 Button Function", NULL, Format_RadioButtons,  "Macro 1,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle, Parking Pause", NULL, NULL, Setting_NonCore, &plugin_settings.macro[0].command_idx, NULL, NULL },
+    { Setting_UserDefined_0, Group_UserSettings, "Button 1 action", NULL, Format_RadioButtons,  "Macro,Cycle start,Pause,Parking pause,Halt,Spindle stop (during pause),Mist toggle,Flood toggle,Probe connected toggle,Optional stop toggle,Single block mode toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[0].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_1, Group_UserSettings, "Macro 2 Button Function", NULL, Format_RadioButtons,  "Macro 2,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle, Parking Pause", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
+    { Setting_UserDefined_1, Group_UserSettings, "Button 2 action", NULL, Format_RadioButtons,  "Macro,Cycle start,Pause,Parking pause,Halt,Spindle stop (during pause),Mist toggle,Flood toggle,Probe connected toggle,Optional stop toggle,Single block mode toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_2, Group_UserSettings, "Macro 3 Button Function", NULL, Format_RadioButtons,  "Macro 3,Cycle Start,Pause,Halt,Probe Connected Toggle,Spindle Stop (during pause),Flood Coolant Toggle,Mist Coolant Toggle,Optional Stop Toggle,Single Block Mode Toggle, Parking Pause", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
+    { Setting_UserDefined_2, Group_UserSettings, "Button 3 action", NULL, Format_RadioButtons,  "Macro,Cycle start,Pause,Parking pause,Halt,Spindle xtop (during pause),Mist toggle,Flood toggle,Probe connected toggle,Optional stop toggle,Single block mode toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
 
 static const setting_descr_t macro_settings_descr[] = {
-    { Setting_UserDefined_3, "Macro content for macro 1, separate blocks (lines) with the vertical bar character |." },
+    { Setting_UserDefined_3, "Macro content, limited to 127 characters. Separate lines with the vertical bar character |." },
 
-    { Setting_UserDefined_4, "Macro content for macro 2, separate blocks (lines) with the vertical bar character |." },
+    { Setting_UserDefined_4, "Macro content, limited to 127 characters. Separate lines with the vertical bar character |." },
 
-    { Setting_UserDefined_5, "Macro content for macro 3, separate blocks (lines) with the vertical bar character |." },
+    { Setting_UserDefined_5, "Macro content, limited to 127 characters. Separate lines with the vertical bar character |." },
 
-    { Setting_UserDefined_0, "Real-time function assigned to Macro 1 (overrides macro)"  },
+    { Setting_UserDefined_0, "Assign a real-time action to button 1, or run your own macro g-code."  },
 
-    { Setting_UserDefined_1, "Real-time function assigned to Macro 2 (overrides macro)"  },
+    { Setting_UserDefined_1, "Assign a real-time action to button 2, or run your own macro g-code."  },
 
-    { Setting_UserDefined_2, "Real-time function assigned to Macro 3 (overrides macro)"  },
+    { Setting_UserDefined_2, "Assign a real-time action to button 3, or run your own macro g-code."  },
 
 };
 
@@ -381,7 +381,7 @@ static void report_options (bool newopt)
     on_report_options(newopt);
 
     if(!newopt)
-        hal.stream.write("[PLUGIN:Macro plugin v0.02]" ASCII_EOL);
+        hal.stream.write("[PLUGIN:Macro plugin v0.03]" ASCII_EOL);
 }
 
 static void warning_msg (uint_fast16_t state)
