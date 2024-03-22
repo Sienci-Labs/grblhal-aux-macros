@@ -252,7 +252,7 @@ static const setting_detail_t macro_settings[] = {
 
     { Setting_UserDefined_1, Group_UserSettings, "Button 2 action", NULL, Format_RadioButtons,  "Macro,Cycle start,Pause,Parking pause,Halt,Spindle stop (during pause),Mist toggle,Flood toggle,Probe connected toggle,Optional stop toggle,Single block mode toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[1].command_idx, NULL, NULL },
 
-    { Setting_UserDefined_2, Group_UserSettings, "Button 3 action", NULL, Format_RadioButtons,  "Macro,Cycle start,Pause,Parking pause,Halt,Spindle xtop (during pause),Mist toggle,Flood toggle,Probe connected toggle,Optional stop toggle,Single block mode toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
+    { Setting_UserDefined_2, Group_UserSettings, "Button 3 action", NULL, Format_RadioButtons,  "Macro,Cycle start,Pause,Parking pause,Halt,Spindle stop (during pause),Mist toggle,Flood toggle,Probe connected toggle,Optional stop toggle,Single block mode toggle", NULL, NULL, Setting_NonCore, &plugin_settings.macro[2].command_idx, NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
