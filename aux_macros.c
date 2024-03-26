@@ -288,9 +288,15 @@ static void macro_settings_restore (void)
 
     char default_str[] = "G4P0";
 
+    //These index the defaults for the action buttons.  Must have N_MACROS number of elements.  Must match radio buttons index.
+    uint8_t def_cmd[] = {   1, //CMD_CYCLE_START
+                            2, //CMD_FEED_HOLD 
+                            4  //CMD_RESET
+                        };   
+
     // Register empty macro strings and set default port numbers if mapping is available.
     for(idx = 0; idx < N_MACROS; idx++) {
-            plugin_settings.macro[idx].command_idx = 0;
+            plugin_settings.macro[idx].command_idx = def_cmd[idx];
         for(idy = 0; idy < strlen(default_str); idy++) {
             plugin_settings.macro[idx].data[idy] = default_str[idy];
         };
